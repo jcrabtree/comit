@@ -1,5 +1,5 @@
 '''
-comit - automatic webscrapper for COMMIT hydro data (http://www.comithydro.niwa.co.nz)
+comit - automatic webscrapper for COMIT hydro data (http://www.comithydro.niwa.co.nz)
 Copyright (C) 2013 David Hume, Electricty Authority, New Zealand.
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -----------------------------------------------------------------------
-This is the commit class.  It is used to connect, login, download, 
+This is the comit class.  It is used to connect, login, download, 
 convert and save daily hydro inflows and storage in New Zelaand.   
 
 Used with the following crontab:
