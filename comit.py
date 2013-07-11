@@ -1,5 +1,5 @@
 '''
-commit - automatic webscrapper for COMMIT hydro data (http://www.comithydro.niwa.co.nz)
+comit - automatic webscrapper for COMMIT hydro data (http://www.comithydro.niwa.co.nz)
 Copyright (C) 2013 David Hume, Electricty Authority, New Zealand.
 
 This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ convert and save daily hydro inflows and storage in New Zelaand.
 
 Used with the following crontab:
    
-5 7 * * * /usr/bin/python /home/dave/python/commit/comit.py --commit_pass='password' >> /home/dave/python/comit/comit_CRON.log 2>&1
+5 7 * * * /usr/bin/python /home/dave/python/comit/comit.py --comit_pass='password' >> /home/dave/python/comit/comit_CRON.log 2>&1
 '''
 
 from pandas import *
