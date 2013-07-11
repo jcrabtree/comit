@@ -21,7 +21,7 @@ convert and save daily hydro inflows and storage in New Zelaand.
 
 Used with the following crontab:
    
-5 7 * * * /usr/bin/python /home/dave/python/commit/commit.py --commit_pass='password' >> /home/dave/python/commit/commit_CRON.log 2>&1
+5 7 * * * /usr/bin/python /home/dave/python/commit/comit.py --commit_pass='password' >> /home/dave/python/comit/comit_CRON.log 2>&1
 '''
 
 from pandas import *
@@ -45,10 +45,10 @@ import EAtools as ea
 #############################################################################################################################################################################        
 
 parser = argparse.ArgumentParser(add_help=False)
-parser.add_argument('--commit_host', action="store",dest='commit_host',default='http://www.comithydro.niwa.co.nz')
-parser.add_argument('--commit_user', action="store",dest='commit_user',default='ecomhyd12')
-parser.add_argument('--commit_pass', action="store",dest='commit_pass')
-parser.add_argument('--commit_path', action="store",dest='commit_path',default='/home/dave/python/commit/')
+parser.add_argument('--comit_host', action="store",dest='comit_host',default='http://www.comithydro.niwa.co.nz')
+parser.add_argument('--comit_user', action="store",dest='comit_user',default='ecomhyd12')
+parser.add_argument('--comit_pass', action="store",dest='comit_pass')
+parser.add_argument('--comit_path', action="store",dest='comit_path',default='/home/dw/comit/')
 
 IPy_notebook = False
 if IPy_notebook == False:
@@ -56,12 +56,12 @@ if IPy_notebook == False:
 if IPy_notebook == True:
     ea.set_options()
     class cmd_line():
-        def __init__(self,commit_host,commit_user,commit_pass,commit_path):
-            self.commit_host = commit_host
-            self.commit_user = commit_user
-            self.commit_pass = commit_pass
-            self.commit_path = commit_path
-    cmd_line=cmd_line('http://www.comithydro.niwa.co.nz','ecomhyd12','password','/home/humed/python/commit/')
+        def __init__(self,comit_host,comit_user,comit_pass,comit_path):
+            self.comit_host = comit_host
+            self.comit_user = comit_user
+            self.comit_pass = comit_pass
+            self.comit_path = comit_path
+    cmd_line=cmd_line('http://www.comithydro.niwa.co.nz','ecomhyd12','password','/home/humed/python/comit/')
 
 #############################################################################################################################################################################        
 #Setup logging
@@ -72,21 +72,21 @@ consoleLogger = logging.StreamHandler()
 consoleLogger.setLevel(logging.INFO)
 consoleLogger.setFormatter(formatter)
 logging.getLogger('').addHandler(consoleLogger)
-fileLogger = logging.handlers.RotatingFileHandler(filename=cmd_line.commit_path + 'commit.log',maxBytes = 1024*1024, backupCount = 9)
+fileLogger = logging.handlers.RotatingFileHandler(filename=cmd_line.comit_path + 'comit.log',maxBytes = 1024*1024, backupCount = 9)
 fileLogger.setLevel(logging.ERROR)
 fileLogger.setFormatter(formatter)
 logging.getLogger('').addHandler(fileLogger)
-logger = logging.getLogger('COMMIT Hydro ')
+logger = logging.getLogger('comit Hydro ')
 logger.setLevel(logging.INFO)
 
-class commit_scraper():
+class comit_scraper():
    
-    def __init__(self,commit_host,commit_user,commit_pass,commit_path):
-        self.commit_host = commit_host
-        self.commit_user = commit_user
-        self.commit_pass = commit_pass
-        self.commit_path = commit_path
-        self.commit_site = self.commit_host + '''/comitweb/request_template.html'''
+    def __init__(self,comit_host,comit_user,comit_pass,comit_path):
+        self.comit_host = comit_host
+        self.comit_user = comit_user
+        self.comit_pass = comit_pass
+        self.comit_path = comit_path
+        self.comit_site = self.comit_host + '''/comitweb/request_template.html'''
         self.inflows_names = {'csv':'inflows.csv','pickle':'inflows.pickle'}
         self.storage_names = {'csv':'storage.csv','pickle':'storage.pickle'}
         self.locations = range(1,15)
@@ -95,17 +95,17 @@ class commit_scraper():
         self.br = None
         
     ##############################################################################################################################        
-    def date_parser(self,x):       #Date parser for Commit data
+    def date_parser(self,x):       #Date parser for comit data
     ##############################################################################################################################        
 
         x=x.split(' ')[0]
         return datetime.date(datetime(int(x.split('/')[2]),int(x.split('/')[1]),int(x.split('/')[0])))
 
     ##############################################################################################################################        
-    def get_data(self,location,storage_inflows):       #Data scraper, hard coded form filler and parser for Commit data
+    def get_data(self,location,storage_inflows):       #Data scraper, hard coded form filler and parser for comit data
     ############################################################################################################################## 
 
-        self.enter_commit()  #enter Commit for each data pass
+        self.enter_comit()  #enter comit for each data pass
         self.br.select_form('test')     #select form 
         self.br['loca'] = [location]  #
         self.br['dura'] = ['365.25']  #
@@ -143,7 +143,7 @@ class commit_scraper():
             return data['2013 stored'],name
 
     ##############################################################################################################################        
-    def enter_commit(self):
+    def enter_comit(self):
     ##############################################################################################################################        
 
         try:
@@ -157,11 +157,11 @@ class commit_scraper():
             self.br.set_handle_robots(False)
             self.br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1) # Follows refresh 0 but not hangs on refresh > 0
             self.br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
-            self.br.add_password(self.commit_host,self.commit_user,self.commit_pass)
-            r=self.br.open(self.commit_host)
-            r=self.br.open(self.commit_site)
+            self.br.add_password(self.comit_host,self.comit_user,self.comit_pass)
+            r=self.br.open(self.comit_host)
+            r=self.br.open(self.comit_site)
         except:
-            error_text = "Unable to logged into COMMIT Hydro"
+            error_text = "Unable to logged into comit Hydro"
             logger.error(error_text.center(msg_len,'*'))
 
     ##############################################################################################################################        
@@ -170,7 +170,7 @@ class commit_scraper():
 
         self.storage = {}
         self.inflows = {}
-        start_text = 'Scraping COMMIT Hydro @ ' + self.commit_site
+        start_text = 'Scraping comit Hydro @ ' + self.comit_site
         logger.info(start_text.center(msg_len,' '))
         for loci in self.locations:
             data_storage,name_storage = self.get_data(str(loci),'storage')
@@ -193,11 +193,11 @@ class commit_scraper():
     def to_pickle_and_csv(self):
     ##############################################################################################################################        
 
-        self.df_storage.to_pickle(self.commit_path + 'data/' + self.storage_names['pickle'])
-        self.df_inflows.to_pickle(self.commit_path + 'data/' + self.inflows_names['pickle'])
-        self.df_storage.to_csv(self.commit_path + 'data/' + self.storage_names['csv'])
-        self.df_inflows.to_csv(self.commit_path + 'data/' + self.inflows_names['csv'])
-        done_text = 'GOT COMMIT Hydro data, saved to ' + self.commit_path + 'data/'
+        self.df_storage.to_pickle(self.comit_path + 'data/' + self.storage_names['pickle'])
+        self.df_inflows.to_pickle(self.comit_path + 'data/' + self.inflows_names['pickle'])
+        self.df_storage.to_csv(self.comit_path + 'data/' + self.storage_names['csv'])
+        self.df_inflows.to_csv(self.comit_path + 'data/' + self.inflows_names['csv'])
+        done_text = 'GOT comit Hydro data, saved to ' + self.comit_path + 'data/'
         logger.info(done_text.center(msg_len,' '))
 
 ##############################################################################################################################        
@@ -206,7 +206,7 @@ class commit_scraper():
 msg_len = 88
 
 if __name__ == '__main__':
-    cs = commit_scraper(cmd_line.commit_host,cmd_line.commit_user,cmd_line.commit_pass,cmd_line.commit_path) #run instance
+    cs = comit_scraper(cmd_line.comit_host,cmd_line.comit_user,cmd_line.comit_pass,cmd_line.comit_path) #run instance
     cs.get_all_data() #get all the data!
     cs.df_the_data()  #data frame the data
     cs.to_pickle_and_csv()
