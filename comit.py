@@ -1,21 +1,8 @@
 '''
 comit - automatic webscrapper for COMIT hydro data (http://www.comithydro.niwa.co.nz)
-Copyright (C) 2013 David Hume, Electricty Authority, New Zealand.
+Copyright (C) 2013 Electricty Authority, New Zealand.
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
------------------------------------------------------------------------
 This is the comit class.  It is used to connect, login, download, 
 convert and save daily hydro inflows and storage in New Zelaand.   
 
