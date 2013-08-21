@@ -9,6 +9,8 @@ convert and save daily hydro inflows and storage in New Zelaand.
 Used with the following crontab:
    
 5 7 * * * /usr/bin/python /home/dave/python/comit/comit.py --comit_pass='password' >> /home/dave/python/comit/comit_CRON.log 2>&1
+
+smb://earnie/concept/2013Plotting/MasterPlotCollection/03Hydrology/inputFiles
 '''
 
 from pandas import *
@@ -187,6 +189,22 @@ class comit_scraper():
         done_text = 'GOT comit Hydro data, saved to ' + self.comit_path + 'data/'
         logger.info(done_text.center(msg_len,' '))
 
+    ##############################################################################################################################        
+    def to_pickle_and_csv_earnie(self): #attempt to save output onto Earnie for Matt/Osmond
+    ##############################################################################################################################        
+        try:
+            self.comit_path = '/run/user/dave/gvfs/smb-share:server=earnie,share=concept/'
+            sub_dir = "2013Plotting/MasterPlotCollection/03Hydrology/inputFiles/"
+            self.df_storage.to_pickle(self.comit_path + sub_dir + self.storage_names['pickle'])
+            self.df_inflows.to_pickle(self.comit_path + sub_dir+ self.inflows_names['pickle'])
+            self.df_storage.to_csv(self.comit_path + sub_dir+ self.storage_names['csv'])
+            self.df_inflows.to_csv(self.comit_path + sub_dir+ self.inflows_names['csv'])
+            done_text = 'GOT comit Hydro data, saved to ' + self.comit_path
+            logger.info(done_text.center(msg_len,' '))
+        except:
+			logger.error('Unable to connect to earnie')
+
+
 ##############################################################################################################################        
 #Start the programme
 ##############################################################################################################################        
@@ -197,6 +215,7 @@ if __name__ == '__main__':
     cs.get_all_data() #get all the data!
     cs.df_the_data()  #data frame the data
     cs.to_pickle_and_csv()
+    cs.to_pickle_and_csv_earnie()
 
 
 
